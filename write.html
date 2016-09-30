@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>写代码</title>
+    <link rel="stylesheet" href="libs/css/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/css/codemirror.css">
+    <script src="libs/js/codemirror.js"></script>
+    <script src="libs/js/javascript.js"></script>
+</head>
+<body style="margin-top: 10px">
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text-center">珠峰课堂实时编辑器</h4>
+        </div>
+        <div class="panel-body">
+            <textarea id="myTextarea" name="" cols="30" rows="30"></textarea>
+        </div>
+    </div>
+</div>
+<script src="libs/js/wilddog.js"></script>
+<script>
+    var myCodeMirror = CodeMirror.fromTextArea(document.querySelector('#myTextarea'), {
+        lineNumbers: true
+    });
+    var ref = new Wilddog("https://zhufengcoding.wilddogio.com");
+    ref.once("value", function (snapshot) {
+        var val = snapshot.val().code;
+        var cursor = myCodeMirror.getCursor();
+        myCodeMirror.setValue(snapshot.val().code);
+        myCodeMirror.setCursor(cursor);
+    });
+    myCodeMirror.on('changes', function (CodeMirror, changeObj) {
+        ref.set({
+            code: CodeMirror.getValue()
+        });
+    });
+</script>
+</body>
+</html>
